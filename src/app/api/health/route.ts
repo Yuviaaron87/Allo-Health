@@ -4,8 +4,23 @@ import { redis } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
+interface DiagnosticResult {
+  status: string;
+  timestamp: string;
+  env: {
+    has_db_url: boolean;
+    has_redis_url: boolean;
+    has_redis_token: boolean;
+    has_auth_secret: boolean;
+    next_auth_url: string;
+    node_env: string | undefined;
+  };
+  database: string;
+  redis: string;
+}
+
 export async function GET() {
-  const diagnostics: any = {
+  const diagnostics: DiagnosticResult = {
     status: 'checking',
     timestamp: new Date().toISOString(),
     env: {
@@ -24,15 +39,17 @@ export async function GET() {
     // Try a simple query
     await db.$queryRaw`SELECT 1`;
     diagnostics.database = 'connected';
-  } catch (e: any) {
-    diagnostics.database = `error: ${e.message || 'Unknown error'}`;
+  } catch (e: unknown) {
+    const error = e as Error;
+    diagnostics.database = `error: ${error.message || 'Unknown error'}`;
   }
 
   try {
     await redis.ping();
     diagnostics.redis = 'connected';
-  } catch (e: any) {
-    diagnostics.redis = `error: ${e.message || 'Unknown error'}`;
+  } catch (e: unknown) {
+    const error = e as Error;
+    diagnostics.redis = `error: ${error.message || 'Unknown error'}`;
   }
 
   diagnostics.status = (diagnostics.database === 'connected' && diagnostics.redis === 'connected') ? 'healthy' : 'degraded';
