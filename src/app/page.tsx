@@ -2,7 +2,7 @@ import db from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
 import { Package, Truck, ShieldCheck, Zap, ArrowRight, Layers, LogOut, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { signOut } from '@/auth';
+import { signOut } from '@/lib/actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,10 +70,7 @@ export default async function Home() {
               <a href="#" className="text-sm font-semibold hover:text-primary transition-colors">Warehouses</a>
               <a href="#analytics" className="text-sm font-semibold hover:text-primary transition-colors">Analytics</a>
             </nav>
-            <form action={async () => {
-              'use server';
-              await signOut({ redirectTo: '/login' });
-            }}>
+            <form action={signOut}>
               <Button type="submit" variant="outline" className="rounded-full px-6 font-bold border-2 flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
                 Sign Out
