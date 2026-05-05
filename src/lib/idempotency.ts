@@ -1,5 +1,4 @@
 import { redis } from './redis';
-import { NextResponse } from 'next/server';
 
 export async function getIdempotentResponse(key: string) {
   const data = await redis.get(`idempotency:${key}`);

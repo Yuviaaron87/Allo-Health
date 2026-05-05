@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { ShoppingCart, MapPin, Check, Boxes, Globe } from 'lucide-react';
+import { ShoppingCart, Check, Boxes, Globe } from 'lucide-react';
 
 interface Inventory {
   warehouseId: string;
@@ -59,7 +58,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       toast.success('Reservation successful. Finalizing details...');
       router.push(`/reservations/${data.id}`);
-    } catch (error) {
+    } catch {
       toast.error('Failed to connect to fulfillment server');
     } finally {
       setLoading(null);

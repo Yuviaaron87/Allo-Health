@@ -4,6 +4,8 @@ import { Package, Truck, ShieldCheck, Zap, ArrowRight, Layers, LogOut, Timer } f
 import { Button } from '@/components/ui/button';
 import { signOut } from '@/auth';
 
+export const dynamic = 'force-dynamic';
+
 async function getProducts() {
   const products = await db.product.findMany({
     include: {

@@ -71,7 +71,7 @@ function AuthForm() {
           }
         }
       }
-    } catch (error) {
+    } catch {
       toast.error('System Authentication Error');
     } finally {
       setLoading(false);

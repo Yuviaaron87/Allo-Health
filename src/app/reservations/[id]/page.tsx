@@ -41,7 +41,7 @@ export default function ReservationPage({ params }: { params: Promise<{ id: stri
         const data = await res.json();
         setReservation(data);
         setLoading(false);
-      } catch (error) {
+      } catch {
         toast.error('Encryption handshake failed');
         router.push('/');
       }
@@ -89,7 +89,7 @@ export default function ReservationPage({ params }: { params: Promise<{ id: stri
 
       toast.success('Asset acquisition confirmed');
       setReservation((prev) => prev ? { ...prev, status: 'CONFIRMED' } : null);
-    } catch (error) {
+    } catch {
       toast.error('Transaction synchronization failed');
     } finally {
       setActionLoading(null);
@@ -108,7 +108,7 @@ export default function ReservationPage({ params }: { params: Promise<{ id: stri
       toast.success('Inventory released to global pool');
       setReservation((prev) => prev ? { ...prev, status: 'RELEASED' } : null);
       setTimeout(() => router.push('/'), 1500);
-    } catch (error) {
+    } catch {
       toast.error('Communication timeout');
     } finally {
       setActionLoading(null);
