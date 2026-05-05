@@ -1,5 +1,3 @@
 {
-  "buildCommand": "prisma generate && next build && node scripts/fix-vercel-build.cjs",
-  "outputDirectory": "next.js",
   "framework": "nextjs"
 }

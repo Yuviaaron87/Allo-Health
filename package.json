@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build && node scripts/fix-vercel-build.cjs",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint"
   },
