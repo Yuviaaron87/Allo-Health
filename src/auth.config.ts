@@ -1,23 +1,8 @@
 import type { NextAuthConfig } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
 
 export default {
   trustHost: true,
-  providers: [
-    Credentials({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        if (credentials?.username === "Admin" && credentials?.password === "admin@123") {
-          return { id: "1", name: "Administrator", role: "admin" }
-        }
-        return null
-      }
-    })
-  ],
+  providers: [], // Providers will be added in auth.ts
   pages: {
     signIn: "/login",
   },

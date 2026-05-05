@@ -1,6 +1,6 @@
 import db from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
-import { Package, Truck, ShieldCheck, Zap, ArrowRight, Layers, LogOut } from 'lucide-react';
+import { Package, Truck, ShieldCheck, Zap, ArrowRight, Layers, LogOut, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from '@/auth';
 
@@ -27,8 +27,22 @@ async function getProducts() {
   }));
 }
 
+async function getAnalytics() {
+  const [total, pending, confirmed, released] = await Promise.all([
+    db.reservation.count(),
+    db.reservation.count({ where: { status: 'PENDING' } }),
+    db.reservation.count({ where: { status: 'CONFIRMED' } }),
+    db.reservation.count({ where: { status: 'RELEASED' } }),
+  ]);
+
+  return { total, pending, confirmed, released };
+}
+
 export default async function Home() {
-  const products = await getProducts();
+  const [products, analytics] = await Promise.all([
+    getProducts(),
+    getAnalytics(),
+  ]);
 
   return (
     <div className="min-h-screen bg-background mesh-gradient relative overflow-hidden">
@@ -50,15 +64,15 @@ export default async function Home() {
           
           <div className="hidden md:flex items-center gap-8">
             <nav className="flex items-center gap-6">
-              <a href="#" className="text-sm font-semibold hover:text-primary transition-colors">Products</a>
+              <a href="#catalog" className="text-sm font-semibold hover:text-primary transition-colors">Products</a>
               <a href="#" className="text-sm font-semibold hover:text-primary transition-colors">Warehouses</a>
-              <a href="#" className="text-sm font-semibold hover:text-primary transition-colors">Analytics</a>
+              <a href="#analytics" className="text-sm font-semibold hover:text-primary transition-colors">Analytics</a>
             </nav>
             <form action={async () => {
               'use server';
-              await signOut();
+              await signOut({ redirectTo: '/login' });
             }}>
-              <Button variant="outline" className="rounded-full px-6 font-bold border-2 flex items-center gap-2">
+              <Button type="submit" variant="outline" className="rounded-full px-6 font-bold border-2 flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
                 Sign Out
               </Button>
@@ -113,6 +127,40 @@ export default async function Home() {
                 {feature.icon}
               </div>
               <span className="font-bold text-sm">{feature.text}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Analytics Section */}
+      <section id="analytics" className="container mx-auto py-24 px-6 relative">
+        <div className="mb-16">
+          <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter italic">
+            Network <span className="text-primary">Intelligence</span>
+          </h2>
+          <p className="text-muted-foreground font-medium max-w-lg">
+            Real-time synchronization metrics from the global fulfillment node.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { label: "Total Requests", value: analytics.total, icon: <Zap className="w-5 h-5 text-yellow-500" />, color: "border-yellow-500/20" },
+            { label: "On Hold (Pending)", value: analytics.pending, icon: <Timer className="w-5 h-5 text-primary" />, color: "border-primary/20" },
+            { label: "Confirmed Assets", value: analytics.confirmed, icon: <ShieldCheck className="w-5 h-5 text-green-500" />, color: "border-green-500/20" },
+            { label: "Released Stock", value: analytics.released, icon: <ArrowRight className="w-5 h-5 text-red-500" />, color: "border-red-500/20" },
+          ].map((stat, i) => (
+            <div key={i} className={`p-8 rounded-[2rem] bg-card border ${stat.color} shadow-2xl hover:scale-[1.02] transition-all group`}>
+              <div className="flex items-center justify-between mb-6">
+                <div className="p-3 bg-muted rounded-xl">
+                  {stat.icon}
+                </div>
+                <div className="h-1 w-12 bg-muted rounded-full overflow-hidden">
+                  <div className="h-full bg-primary w-2/3 group-hover:w-full transition-all duration-1000" />
+                </div>
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{stat.label}</p>
+              <h3 className="text-5xl font-black tabular-nums tracking-tighter">{stat.value}</h3>
             </div>
           ))}
         </div>

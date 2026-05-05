@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Timer, ArrowLeft, CheckCircle2, XCircle, ShieldCheck, Box, CreditCard, Lock, ArrowUpRight } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { Timer, ArrowLeft, CheckCircle2, XCircle, ShieldCheck, Box, CreditCard, Lock, ArrowUpRight, LogOut } from 'lucide-react';
 import React from 'react';
 
 interface Reservation {
@@ -135,14 +136,24 @@ export default function ReservationPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-background mesh-gradient flex flex-col items-center py-24 px-6 relative">
       <div className="w-full max-w-2xl relative z-10">
-        <Button 
-          variant="ghost" 
-          className="mb-12 group text-xs font-black uppercase tracking-widest hover:bg-white/5" 
-          onClick={() => router.push('/')}
-        >
-          <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
-          Abort to Control Center
-        </Button>
+        <div className="flex justify-between items-center mb-12">
+          <Button 
+            variant="ghost" 
+            className="group text-xs font-black uppercase tracking-widest hover:bg-white/5" 
+            onClick={() => router.push('/')}
+          >
+            <ArrowLeft className="mr-3 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
+            Abort to Control Center
+          </Button>
+          <Button 
+            variant="outline" 
+            className="rounded-full px-6 font-bold border-2 flex items-center gap-2 bg-background/50"
+            onClick={() => signOut({ callbackUrl: '/login' })}
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </Button>
+        </div>
 
         <Card className="glass-panel border-none rounded-[2.5rem] overflow-hidden">
           {/* Header Badge */}
