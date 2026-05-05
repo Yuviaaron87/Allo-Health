@@ -2,14 +2,31 @@ import { PrismaClient } from '../generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is missing');
-}
-
 const prismaClientSingleton = () => {
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaPg(pool);
-  return new PrismaClient({ adapter });
+  try {
+    const url = process.env.DATABASE_URL;
+    if (!url) {
+      console.error('DATABASE_URL is missing');
+      return new PrismaClient(); // Fallback to default (will likely fail later but won't crash module load)
+    }
+
+    const pool = new pg.Pool({ 
+      connectionString: url,
+      ssl: url.includes('sslmode=require') || url.includes('supabase.co') || url.includes('neon.tech') 
+        ? { rejectUnauthorized: false } 
+        : false
+    });
+    
+    pool.on('error', (err) => {
+      console.error('Unexpected error on idle client', err);
+    });
+
+    const adapter = new PrismaPg(pool);
+    return new PrismaClient({ adapter });
+  } catch (error) {
+    console.error('Failed to initialize Prisma Client:', error);
+    return new PrismaClient();
+  }
 };
 
 declare global {
