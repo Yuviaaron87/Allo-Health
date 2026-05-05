@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && next build && node -e \"const fs = require('fs'); if (fs.existsSync('next.js')) fs.rmSync('next.js', { recursive: true, force: true }); fs.renameSync('.next', 'next.js');\"",
     "start": "next start",
     "lint": "eslint"
   },
