@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && next build && powershell -Command \"if (Test-Path next.js) { Remove-Item -Recurse -Force next.js }; Rename-Item .next next.js\"",
     "start": "next start",
     "lint": "eslint"
   },
