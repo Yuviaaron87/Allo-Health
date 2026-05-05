@@ -3,6 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import { Package, Truck, ShieldCheck, Zap, ArrowRight, Layers, LogOut, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from '@/lib/actions';
+import Image from 'next/image';
 
 export const dynamic = 'force-dynamic';
 
@@ -104,7 +105,14 @@ export default async function Home() {
             <div className="flex -space-x-4 items-center pl-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="w-12 h-12 rounded-full border-4 border-background bg-muted flex items-center justify-center overflow-hidden">
-                  <img src={`https://i.pravatar.cc/150?u=${i}`} alt="user" className="w-full h-full object-cover" />
+                  <Image 
+                    src={`https://i.pravatar.cc/150?u=${i}`} 
+                    alt="user" 
+                    width={48} 
+                    height={48} 
+                    className="w-full h-full object-cover"
+                    unoptimized
+                  />
                 </div>
               ))}
               <div className="pl-6 text-sm font-bold text-muted-foreground">
