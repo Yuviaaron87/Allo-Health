@@ -71,7 +71,10 @@ export default async function Home() {
               <a href="#" className="text-sm font-semibold hover:text-primary transition-colors">Warehouses</a>
               <a href="#analytics" className="text-sm font-semibold hover:text-primary transition-colors">Analytics</a>
             </nav>
-            <form action={signOut}>
+            <form action={async () => {
+              "use server"
+              await signOut()
+            }}>
               <Button type="submit" variant="outline" className="rounded-full px-6 font-bold border-2 flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
                 Sign Out
