@@ -4,6 +4,6 @@ import authConfig from "./auth.config"
 export default NextAuth(authConfig).auth
 
 export const config = {
-  // Protect all routes except login, api/auth, and public assets
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|login).*)"],
+  // Protect all routes except login, api/auth, api/health, and public assets
+  matcher: ["/((?!api/auth|api/health|_next/static|_next/image|favicon.ico|login).*)"],
 }
