@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import bcrypt from "bcrypt";
 import { registerSchema } from "@/lib/validations";
+import { ZodError } from "zod";
 
 export async function POST(req: Request) {
   try {
@@ -33,10 +34,10 @@ export async function POST(req: Request) {
       { message: "User created successfully", userId: user.id },
       { status: 201 }
     );
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error) {
+    if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: error.errors[0].message },
+        { error: error.issues[0]?.message || "Invalid input" },
         { status: 400 }
       );
     }

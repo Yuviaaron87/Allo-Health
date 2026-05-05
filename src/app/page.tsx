@@ -200,7 +200,7 @@ export default async function Home() {
                 <span className="text-xl font-black tracking-tighter uppercase">Allo Stock</span>
               </div>
               <p className="text-muted-foreground max-w-sm mb-8">
-                The world's most advanced inventory reservation protocol. Built for reliability, speed, and precision.
+                The world&apos;s most advanced inventory reservation protocol. Built for reliability, speed, and precision.
               </p>
             </div>
             <div>

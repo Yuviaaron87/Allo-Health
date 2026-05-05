@@ -9,7 +9,7 @@ export async function getIdempotentResponse(key: string) {
   return null;
 }
 
-export async function saveIdempotentResponse(key: string, response: any, ttlSeconds: number = 86400) {
+export async function saveIdempotentResponse(key: string, response: { body: unknown; status: number }, ttlSeconds: number = 86400) {
   await redis.set(`idempotency:${key}`, JSON.stringify(response), {
     ex: ttlSeconds,
   });

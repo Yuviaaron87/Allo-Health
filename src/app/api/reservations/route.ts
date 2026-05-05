@@ -66,24 +66,25 @@ export async function POST(req: NextRequest) {
     if (idempotencyKey) await saveIdempotentResponse(idempotencyKey, response);
 
     return NextResponse.json(reservation, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Reservation error:', error);
     
     let status = 500;
     let message = 'Internal Server Error';
 
-    if (error.message === 'NOT_FOUND') {
-      status = 404;
-      message = 'Product or Warehouse not found';
-    } else if (error.message === 'INSUFFICIENT_STOCK') {
-      status = 409;
-      message = 'Not enough stock available';
-    } else if (error.message === 'Could not acquire lock') {
-      status = 429;
-      message = 'Server busy, please try again';
+    if (error instanceof Error) {
+      if (error.message === 'NOT_FOUND') {
+        status = 404;
+        message = 'Product or Warehouse not found';
+      } else if (error.message === 'INSUFFICIENT_STOCK') {
+        status = 409;
+        message = 'Not enough stock available';
+      } else if (error.message === 'Could not acquire lock') {
+        status = 429;
+        message = 'Server busy, please try again';
+      }
     }
 
-    const errorResponse = { body: { error: message }, status };
     // We don't necessarily want to cache 500s or 429s for idempotency in the same way, 
     // but the requirements say "Return same response for retries".
     // Usually only successful or 4xx responses are cached.
